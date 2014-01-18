@@ -38,6 +38,8 @@ while True:
                 # Ignore hash and extract integer used to determine intensity
                 intensity = x[5:]
                 intensity = int(math.fabs(float(intensity)))
-                fs.noteon(0, 60 + pitch, intensity);
+                fs.noteon(0, 60 + pitch, intensity)
+                time.sleep(1.0)
+                fs.noteoff(0, 60 + pitch)
     except serial.serialutil.SerialException:
         pass
