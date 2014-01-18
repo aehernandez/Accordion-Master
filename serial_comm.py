@@ -32,7 +32,12 @@ while True:
             x = ser.readline()
             if x.strip() and x != '':
                 print x
-                x = int(math.fabs(float(x)))
-                fs.noteon(0, 60, x);
+                # Extract 4-bit word used to determine pitch
+                pitch = x[:4]
+                pitch = int(pitch)
+                # Ignore hash and extract integer used to determine intensity
+                intensity = x[5:]
+                intensity = int(math.fabs(float(intensity)))
+                fs.noteon(0, 60 + pitch, intensity);
     except serial.serialutil.SerialException:
         pass
