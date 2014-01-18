@@ -34,7 +34,7 @@ while True:
                 print x
                 # Extract 4-bit word used to determine pitch
                 pitch = x[:4]
-                pitch = int(pitch)
+                pitch = int(pitch, 2)
                 # Ignore hash and extract integer used to determine intensity
                 intensity = x[5:]
                 intensity = int(math.fabs(float(intensity)))
