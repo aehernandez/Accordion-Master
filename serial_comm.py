@@ -51,14 +51,12 @@ while True:
                 # Ignore hash and extract integer used to determine intensity
                 intensity = x[5:]
                 intensity = int(math.fabs(float(intensity)))
-                intensity = intensity if x < 120 else 120
+                intensity = intensity if intensity < 120 else 120
                 if pitch != pitchPrev:
                     fs.noteoff(0, 59+pitchPrev)
                 if pitch != 0:
                     fs.noteon(0, 59 + pitch, intensity)
                 pitchPrev = pitch
-
-                mat.write(intensity);
-                mat.write('\n');
+                mat.write(str(intensity)+'\n');
     except serial.serialutil.SerialException and ValueError:
         pass
