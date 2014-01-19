@@ -2,7 +2,7 @@
 #include <Adafruit_GFX.h>
 #include <gamma.h>
 
-#define CLK 8  // MUST be on PORTB!
+#define CLK 8
 #define LAT A3
 #define OE  9
 #define A   A0
@@ -23,22 +23,19 @@ void setup() {
   matrix.begin();
   Serial.begin(9600);
   // Initialize wave to zero
-  for(int i = 0; i < width; i++) waves[i] = 0;
   color = matrix.Color333(7,0,0);
   black = matrix.Color333(0,0,0);
 }
 
 void loop() {
 // Block untill serial is available  
-   while(!Serial.available()){}
-   
-   while(Serial.available() && (c = Serial.read() != '\n')) {
-     waveIntensity = (waveIntensity << 8) | c;
-   } 
-   c = 0;
+   while(Serial.available()){
+   waveIntensity = Serial.parseInt();
    
    waveIntensity = ceil(waveIntensity / 8);
-   matrix.drawLine(currentFrame, 0, currentFrame, 15, black);
-   matrix.drawLine(currentFrame, 15, currentFrame, waveIntensity, color);
+   matrix.drawFastVLine(currentFrame, 0, 15, 0x0000);
+   matrix.drawFastVLine(currentFrame, 15-waveIntensity, waveIntensity+1, color);
+
    currentFrame = (currentFrame + 1) % 32;
+   }
 }

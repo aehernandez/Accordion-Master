@@ -10,20 +10,30 @@ fs.start(driver='alsa')
 # Load the accordion soundfont
 sfid = fs.sfload("accordion.sf2")
 fs.program_select(0, sfid, 0, 0)
-
 # Find the first open Serial Port
 for i in range(256):
     try:
         ser = serial.Serial("/dev/ttyUSB{}".format(i) , 9600)
-        print "Found open serial port: USB{}".format(i)
+        print "Found first open serial port: USB{}".format(i)
+        limit = i;
         break
 
     except serial.SerialException and OSError:
         if i == 255:
-            print "Fatal Error: No open port found"  
+            print "fatal error: no open port found"  
             sys.exit()
             pass
-
+# Find the second open port
+for i in range(limit+1, 256):
+    try:
+        mat = serial.Serial("/dev/ttyUSB{}".format(i) , 9600)
+        print "Found second open serial port: USB{}".format(i)
+        break
+    except serial.SerialException and OSError:
+        if i == 255:
+            print "fatal error: no open port found"  
+            sys.exit()
+            pass
 
 print("Finished init\n")
 
@@ -47,5 +57,8 @@ while True:
                 if pitch != 0:
                     fs.noteon(0, 59 + pitch, intensity)
                 pitchPrev = pitch
+
+                mat.write(intensity);
+                mat.write('\n');
     except serial.serialutil.SerialException and ValueError:
         pass
