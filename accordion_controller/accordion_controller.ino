@@ -22,7 +22,7 @@ const int gnd = A4;
 const double k = 0.8f;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(14400);
 
   pinMode(vcc, OUTPUT);
   digitalWrite(vcc, HIGH);
