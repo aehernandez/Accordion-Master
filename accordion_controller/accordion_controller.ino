@@ -1,3 +1,4 @@
+// Section 1: Constants and Variables //
 int x, y, z, mag;
 int xPrev, yPrev, zPrev;
 double xAvg, yAvg, zAvg;
@@ -8,6 +9,10 @@ const int xPin = 1;
 const int yPin = 2;
 const int zPin = 3;
 
+const int vcc = A5;
+const int gnd = A4;
+
+// Amount of data points to use for calibration
 const double calCount = 100;
 
 // Pins for note switching
@@ -16,13 +21,11 @@ const int b = 9;
 const int c = 10;
 const int d = 11;
 
-const int vcc = A5;
-const int gnd = A4;
 // Constant for Low Pass filter
-const double k = 0.8f;
+const double k = 0.9f;
 
 void setup() {
-  Serial.begin(14400);
+  Serial.begin(9600);
 
   pinMode(vcc, OUTPUT);
   digitalWrite(vcc, HIGH);
@@ -68,7 +71,6 @@ void loop() {
   Serial.print(mag);
   Serial.print("\n");
   
-
   // Update values for next iteration
   xPrev = x;
   yPrev = y;
@@ -89,6 +91,7 @@ void calibrate() {
     zAvg += analogRead(zPin);
   }
 
+  // Get the average
   xAvg = xAvg / calCount;
   yAvg = yAvg / calCount;
   zAvg = zAvg / calCount;
