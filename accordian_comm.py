@@ -11,6 +11,7 @@ fs.start(driver='alsa')
 sfid = fs.sfload("accordion.sf2")
 fs.program_select(0, sfid, 0, 0)
 # Find the first open Serial Port
+useMatrix = 0
 for i in range(256):
     try:
         ser = serial.Serial("/dev/ttyUSB{}".format(i) , 9600)
@@ -24,16 +25,17 @@ for i in range(256):
             sys.exit()
             pass
 # Find the second open port
-for i in range(limit+1, 256):
-    try:
-        mat = serial.Serial("/dev/ttyUSB{}".format(i) , 9600)
-        print "Found second open serial port: USB{}".format(i)
-        break
-    except serial.SerialException and OSError:
-        if i == 255:
-            print "fatal error: no open port found"  
-            sys.exit()
-            pass
+if useMatrix:
+    for i in range(limit+1, 256):
+        try:
+            mat = serial.Serial("/dev/ttyUSB{}".format(i) , 9600)
+            print "Found second open serial port: USB{}".format(i)
+            break
+        except serial.SerialException and OSError:
+            if i == 255:
+                print "fatal error: no open port found"  
+                sys.exit()
+                pass
 
 print("Finished init\n")
 
@@ -57,6 +59,7 @@ while True:
                 if pitch != 0:
                     fs.noteon(0, 59 + pitch, intensity)
                 pitchPrev = pitch
-                mat.write(str(intensity)+'\n');
+                if useMatrix: 
+                    mat.write(str(intensity)+'\n');
     except serial.serialutil.SerialException and ValueError:
         pass
